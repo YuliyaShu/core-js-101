@@ -131,11 +131,6 @@ function angleBetweenClockHands(date) {
     hours -= 12;
   }
   const angle = Math.abs(0.5 * (60 * hours - 11 * date.getMinutes()) * (Math.PI / 180));
-  // (Math
-  //   .abs((hours) * 5 + 5 * (date.getMinutes() / 60)
-  //     - date.getMinutes()) * 6) * (Math.PI / 180);
-  console.log(angle);
-  // return
   return (angle > Math.PI) ? (angle - Math.PI) : angle;
 }
 

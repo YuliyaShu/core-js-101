@@ -147,9 +147,6 @@ const cssSelectorBuilder = {
   },
 
   combine(selector1, combinator, selector2) {
-    console.log(selector2.returnValue());
-    console.log(selector1);
-    console.log(selector1.value);
     this.value = selector1.value + combinator + selector2.value;
     return this;
   },

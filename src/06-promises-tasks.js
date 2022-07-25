@@ -101,7 +101,6 @@ function getFastestPromise(array) {
 function chainPromises(array, action) {
   const result = [];
   const errors = [];
-
   async function getRes(arr, i = 0) {
     if (i === arr.length) return result;
     try {
@@ -114,23 +113,6 @@ function chainPromises(array, action) {
   return new Promise((resolve) => {
     getRes(array).then((final) => resolve(final.reduce(action)));
   });
-
-
-  // async function getActionResult(arrayIncome) {
-  //   const arr = arrayIncome.reduce((res1, item) => {
-  //     if (item.status === 'fulfilled') {
-  //       res1.push(item.value);
-  //     }
-  //     return res1;
-  //   }, []);
-  //   let result = action(arr[0], arr[1]);
-  //   for (let i = 2; i < arr.length; i += 1) {
-  //     result = action(result, arr[i]);
-  //   }
-  //   return result;
-  // }
-  // const fine = getActionResult(array);
-  // return Promise(resolve => resolve(fine)
 }
 
 module.exports = {

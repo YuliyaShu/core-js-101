@@ -113,53 +113,67 @@ function fromJSON(proto, json) {
  */
 
 const cssSelectorBuilder = {
-  value: '',
   result: '',
+  order: [],
 
   element(value) {
-    this.value = value;
-    return this;
+    return this.createElem(0, value);
   },
 
   id(value) {
-    this.value += `#${value}`;
-    return this;
+    return this.createElem(1, `#${value}`);
   },
 
   class(value) {
-    this.value += `.${value}`;
-    return this;
+    return this.createElem(2, `.${value}`);
   },
 
   attr(value) {
-    this.value += `[${value}]`;
-    return this;
+    return this.createElem(3, `[${value}]`);
   },
 
   pseudoClass(value) {
-    this.value += `:${value}`;
-    return this;
+    return this.createElem(4, `:${value}`);
   },
 
   pseudoElement(value) {
-    this.value += `::${value}`;
-    return this;
+    return this.createElem(5, `::${value}`);
   },
 
   combine(selector1, combinator, selector2) {
-    this.value = selector1.value + combinator + selector2.value;
-    return this;
+    return Object.assign(
+      Object.create(this),
+      { result: `${selector1.result} ${combinator} ${selector2.result}` },
+    );
   },
 
   stringify() {
-    this.result = this.value;
-    this.value = '';
     return this.result;
   },
 
-  returnValue() {
-    return this.value;
+  createElem(place, val) {
+    const obj = Object.create(this);
+    obj.order = this.order.concat(place);
+    this.isOrder(obj.order);
+    this.isUniq(obj.order);
+    obj.result = this.result + val;
+    return obj;
   },
+
+  isUniq(order) {
+    if (order
+      .filter((n) => (n < 2) || (n > 4))
+      .findIndex((e, i, a) => a.indexOf(e) !== i) >= 0) { throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector'); }
+  },
+
+  isOrder(order) {
+    if (!(Array(order.length)
+      .fill()
+      .map((_, i) => order[i])
+      .sort((a, b) => a - b)
+      .every((e, i) => e === order[i]))) { throw new Error('Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element'); }
+  },
+
 };
 
 
